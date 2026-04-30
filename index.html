@@ -397,7 +397,17 @@
   <div class="hero-eyebrow">Beta Testing Program</div>
   <h1>Help Shape <span>GrainSight</span></h1>
   <div class="hero-rule"></div>
-  <p>Your feedback as a real woodworker is more valuable than anything we can test ourselves. Tell us what works, what doesn't, and what you wish existed.</p>
+  <p id="hero-subtitle">Your feedback as a real woodworker is more valuable than anything we can test ourselves. Tell us what works, what doesn't, and what you wish existed.</p>
+  <script>
+    const p = new URLSearchParams(window.location.search);
+    const r = parseInt(p.get('round') || '1');
+    const subtitles = [
+      'Your feedback as a real woodworker is more valuable than anything we can test ourselves. Tell us your first impressions.',
+      'You\'ve been using GrainSight for a while now. Tell us what\'s working, what\'s clunky, and what\'s missing.',
+      'Final round! This is your chance to tell us everything — would you pay for this? What would make it essential?'
+    ];
+    document.getElementById('hero-subtitle').textContent = subtitles[r - 1] || subtitles[0];
+  </script>
 </div>
 
 <div class="container">
@@ -784,6 +794,10 @@
     btn.classList.add('selected');
   }
 
+  // Get round from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const round = parseInt(urlParams.get('round') || '1');
+
   document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -798,6 +812,8 @@
         data[key] = value;
       }
     }
+    
+    data.round = round;
 
     try {
       const response = await fetch('https://grainsight-backend-production.up.railway.app/beta-feedback/', {
